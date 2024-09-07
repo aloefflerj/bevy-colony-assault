@@ -1,7 +1,9 @@
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::KinematicCharacterController;
 
-use crate::player::{self, components::*};
+use crate::player::components::*;
+
+use super::{PLAYER_FALL_SPEED, PLAYER_X_SPEED};
 
 pub fn move_x(
     key_board_input: Res<ButtonInput<KeyCode>>,
@@ -13,11 +15,11 @@ pub fn move_x(
     let mut movement = 0.;
 
     if key_board_input.pressed(KeyCode::ArrowRight) {
-        movement += time.delta_seconds() * 400.;
+        movement += time.delta_seconds() * PLAYER_X_SPEED;
     }
 
     if key_board_input.pressed(KeyCode::ArrowLeft) {
-        movement += time.delta_seconds() * 400. * -1.;
+        movement += time.delta_seconds() * PLAYER_X_SPEED * -1.;
     }
 
     match player.translation {
@@ -28,7 +30,7 @@ pub fn move_x(
 
 pub fn fall(time: Res<Time>, mut query: Query<&mut KinematicCharacterController, With<Player>>) {
     let mut player = query.single_mut();
-    let movement = time.delta().as_secs_f32() * (850. / 1.5) * -1.;
+    let movement = time.delta().as_secs_f32() * (PLAYER_FALL_SPEED / 1.5) * -1.;
 
     match player.translation {
         Some(vec) => player.translation = Some(Vec2::new(vec.x, movement)),

@@ -1,7 +1,15 @@
 use bevy::{prelude::*, window::WindowResolution};
 
-const WINDOW_WIDTH: f32 = 1920.0;
-const WINDOW_HEIGHT: f32 = 1080.0;
+pub const WINDOW_WIDTH: f32 = 1920.0;
+pub const WINDOW_HEIGHT: f32 = 1080.0;
+
+pub const ORTOGRAPHIC_WINDOW_WIDTH: f32 = WINDOW_WIDTH * ORTOGRAPHIC_PROJECTION_SCALE;
+pub const ORTOGRAPHIC_WINDOW_HEIGHT: f32 = WINDOW_HEIGHT * ORTOGRAPHIC_PROJECTION_SCALE;
+
+pub const WINDOW_LEFT_X: f32 = ORTOGRAPHIC_WINDOW_WIDTH / -2.0;
+pub const WINDOW_BOTTOM_Y: f32 = ORTOGRAPHIC_WINDOW_HEIGHT / -2.0;
+
+pub const ORTOGRAPHIC_PROJECTION_SCALE: f32 = 0.166666667;
 
 pub struct DefaultPluginOptions {
     pub window_plugin: WindowPlugin,
