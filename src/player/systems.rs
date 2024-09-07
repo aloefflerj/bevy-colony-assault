@@ -5,6 +5,7 @@ use crate::player::animation::bundles::*;
 use crate::player::animation::components::*;
 use crate::player::components::*;
 use bevy::prelude::*;
+use bevy_rapier2d::prelude::*;
 
 const PLAYER_SPRITE_WIDTH: u32 = 18;
 const PLAYER_SPRITE_HEIGHT: u32 = 16;
@@ -27,22 +28,31 @@ pub fn spawn_player(
     );
     let texture_atlas_layout = texture_atlas_layouts.add(layout);
 
-    commands.spawn((
-        SpriteBundle {
-            texture,
-            ..default()
-        },
-        TextureAtlas {
-            layout: texture_atlas_layout,
-            index: PlayerAnimations::initial_frame(),
-        },
-        PlayerAnimations::build(),
-        PlayerAnimationTimer(Timer::new(
-            Duration::from_secs_f32(
-                (1.0 / (DEFAULT_ANIMATION_FPS as f32))
-                    * PlayerIdleAnimation::default_frames_qty() as f32,
-            ),
-            TimerMode::Repeating,
-        )),
-    ));
+    commands
+        .spawn((
+            Player,
+            SpriteBundle {
+                texture,
+                ..default()
+            },
+            TextureAtlas {
+                layout: texture_atlas_layout,
+                index: PlayerAnimations::initial_frame(),
+            },
+            PlayerAnimations::build(),
+            PlayerAnimationTimer(Timer::new(
+                Duration::from_secs_f32(
+                    (1.0 / (DEFAULT_ANIMATION_FPS as f32))
+                        * PlayerIdleAnimation::default_frames_qty() as f32,
+                ),
+                TimerMode::Repeating,
+            )),
+        ))
+        .insert(RigidBody::KinematicPositionBased)
+        .insert(Collider::cuboid(
+            PLAYER_SPRITE_WIDTH as f32 / 2.0,
+            PLAYER_SPRITE_HEIGHT as f32 / 2.0,
+        ))
+        .insert(KinematicCharacterController::default())
+        .insert(PlayerDirection::Right);
 }
