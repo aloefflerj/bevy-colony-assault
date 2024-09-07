@@ -1,42 +1,48 @@
-use crate::animation::*;
-use crate::sprite::bundles::*;
-use crate::sprite::components::*;
+use std::time::Duration;
+
+use crate::animation::DEFAULT_ANIMATION_FPS;
+use crate::player::animation::bundles::*;
+use crate::player::animation::components::*;
+use crate::player::components::*;
 use bevy::prelude::*;
 
-const SPRITE_TILE_WIDTH: u32 = 18;
-const SPRITE_TILE_HEIGHT: u32 = 16;
+const PLAYER_SPRITE_WIDTH: u32 = 18;
+const PLAYER_SPRITE_HEIGHT: u32 = 16;
+const PLAYER_SPRITE_ROWS: u32 = 4;
+const PLAYER_SPRITE_COLUMNS: u32 = 4;
 
 pub fn spawn_player(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
-    texture_atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
+    mut texture_atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
 ) {
-    commands.spawn(AnimatedSprite::build(
-        asset_server.load("player/ant-idle.png"),
-        AnimationConfig {
-            frames_qty: 3,
-            fps: 12,
-        },
-        SpriteTileProperties {
-            width: SPRITE_TILE_WIDTH,
-            height: SPRITE_TILE_HEIGHT,
-            rows: 1,
-            columns: 3,
-        },
-        texture_atlas_layouts,
-    ));
-}
+    commands.spawn(Player);
+    let texture = asset_server.load("player/player.png");
+    let layout = TextureAtlasLayout::from_grid(
+        UVec2::new(PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_HEIGHT),
+        PLAYER_SPRITE_COLUMNS,
+        PLAYER_SPRITE_ROWS,
+        None,
+        None,
+    );
+    let texture_atlas_layout = texture_atlas_layouts.add(layout);
 
-pub fn animate_idle(
-    time: Res<Time>,
-    mut query: Query<(&AnimationConfig, &mut AnimationTimer, &mut TextureAtlas)>,
-) {
-    for (animation_config, mut animation_timer, mut texture_atlas) in &mut query {
-        animator::animate_in_loop(
-            &time,
-            animation_config,
-            animation_timer.as_mut(),
-            texture_atlas.as_mut(),
-        );
-    }
+    commands.spawn((
+        SpriteBundle {
+            texture,
+            ..default()
+        },
+        TextureAtlas {
+            layout: texture_atlas_layout,
+            index: PlayerAnimations::initial_frame(),
+        },
+        PlayerAnimations::build(),
+        PlayerAnimationTimer(Timer::new(
+            Duration::from_secs_f32(
+                (1.0 / (DEFAULT_ANIMATION_FPS as f32))
+                    * PlayerIdleAnimation::default_frames_qty() as f32,
+            ),
+            TimerMode::Repeating,
+        )),
+    ));
 }

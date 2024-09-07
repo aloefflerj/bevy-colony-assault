@@ -2,7 +2,6 @@ mod animation;
 mod camera;
 mod config;
 mod player;
-mod sprite;
 
 use bevy::prelude::*;
 use camera::CameraPlugin;
