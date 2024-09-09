@@ -1,3 +1,3 @@
 pub mod animator;
 
-pub const DEFAULT_ANIMATION_FPS: usize = 12;
+pub const DEFAULT_ANIMATION_FPS: usize = 24;

@@ -12,7 +12,7 @@ pub fn animate_in_loop(
         return;
     }
 
-    texture_atlas.index = if texture_atlas.index == last_frame {
+    texture_atlas.index = if texture_atlas.index >= last_frame {
         first_frame
     } else {
         texture_atlas.index + 1

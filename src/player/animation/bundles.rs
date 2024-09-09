@@ -14,27 +14,30 @@ pub struct PlayerAnimations {
 impl PlayerAnimations {
     pub fn build() -> Self {
         Self {
-            idle_animation: PlayerIdleAnimation {
-                first_frame: 0,
-                last_frame: 2,
-            },
-            run_animation: PlayerRunAnimation {
-                first_frame: 4,
-                last_frame: 7,
-            },
-            attack_animation: PlayerAttackAnimation {
-                first_frame: 8,
-                last_frame: 11,
-            },
-            jump_animation: PlayerJumpAnimation {
-                first_frame: 12,
-                last_frame: 13,
-            },
-            fall_animation: PlayerFallAnimation {
-                first_frame: 14,
-                last_frame: 15,
-            },
+            idle_animation: PlayerIdleAnimation::default(),
+            run_animation: PlayerRunAnimation::default(),
+            attack_animation: PlayerAttackAnimation::default(),
+            jump_animation: PlayerJumpAnimation::default(),
+            fall_animation: PlayerFallAnimation::default(),
         }
+    }
+
+    pub fn params_to_tuple(
+        &self,
+    ) -> (
+        &PlayerIdleAnimation,
+        &PlayerRunAnimation,
+        &PlayerAttackAnimation,
+        &PlayerJumpAnimation,
+        &PlayerFallAnimation,
+    ) {
+        (
+            &self.idle_animation,
+            &self.run_animation,
+            &self.attack_animation,
+            &self.jump_animation,
+            &self.fall_animation,
+        )
     }
 
     pub fn initial_frame() -> usize {

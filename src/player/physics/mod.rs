@@ -3,8 +3,8 @@ mod systems;
 use crate::player::physics::systems::*;
 use bevy::prelude::*;
 
-const PLAYER_X_SPEED: f32 = 400.;
-const PLAYER_Y_SPEED: f32 = 400.;
+const PLAYER_X_SPEED: f32 = 150.;
+const PLAYER_Y_SPEED: f32 = 200.;
 const PLAYER_FALL_SPEED: f32 = 850.;
 
 pub struct PlayerPhysicsPlugin;

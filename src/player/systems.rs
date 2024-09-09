@@ -1,6 +1,3 @@
-use std::time::Duration;
-
-use crate::animation::DEFAULT_ANIMATION_FPS;
 use crate::player::animation::bundles::*;
 use crate::player::animation::components::*;
 use crate::player::components::*;
@@ -40,13 +37,7 @@ pub fn spawn_player(
                 index: PlayerAnimations::initial_frame(),
             },
             PlayerAnimations::build(),
-            PlayerAnimationTimer(Timer::new(
-                Duration::from_secs_f32(
-                    (1.0 / (DEFAULT_ANIMATION_FPS as f32))
-                        * PlayerIdleAnimation::default_frames_qty() as f32,
-                ),
-                TimerMode::Repeating,
-            )),
+            PlayerAnimationTimer::default(),
         ))
         .insert(RigidBody::KinematicPositionBased)
         .insert(Collider::cuboid(
