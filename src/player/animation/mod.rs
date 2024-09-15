@@ -51,6 +51,8 @@ impl Plugin for PlayerAnimationPlugin {
                 animate_run
                     .run_if(in_state(PlayerAnimationState::Run))
                     .in_set(AnimateSet),
+                update_sprite_direction,
+                handle_direction_state,
             ),
         );
     }

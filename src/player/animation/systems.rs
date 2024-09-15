@@ -80,6 +80,23 @@ pub fn handle_animation_state(
     }
 }
 
+pub fn handle_direction_state(
+    mut commands: Commands,
+    query: Query<(Entity, &PlayerVelocity), With<Player>>,
+) {
+    if query.is_empty() {
+        return;
+    }
+
+    let (player, player_velocity) = query.single();
+
+    if player_velocity.velocity.x > 0. {
+        commands.entity(player).insert(PlayerDirection::Right);
+    } else if player_velocity.velocity.x < 0. {
+        commands.entity(player).insert(PlayerDirection::Left);
+    }
+}
+
 pub fn reset_animation(
     animation_state: Res<State<PlayerAnimationState>>,
     mut query: Query<(&PlayerIdleAnimation, &PlayerRunAnimation, &mut TextureAtlas), With<Player>>,
@@ -106,4 +123,16 @@ pub fn reset_timer(mut query: Query<&mut PlayerAnimationTimer, With<Player>>) {
 
     let mut animation_timer = query.single_mut();
     animation_timer.reset();
+}
+
+pub fn update_sprite_direction(mut query: Query<(&mut Sprite, &PlayerDirection)>) {
+    if query.is_empty() {
+        return;
+    }
+
+    let (mut sprite, direction) = query.single_mut();
+    match direction {
+        PlayerDirection::Right => sprite.flip_x = false,
+        PlayerDirection::Left => sprite.flip_x = true,
+    };
 }
