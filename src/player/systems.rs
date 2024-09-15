@@ -4,7 +4,7 @@ use crate::player::components::*;
 use crate::player::physics::components::*;
 use bevy::prelude::*;
 
-const PLAYER_SPRITE_WIDTH: u32 = 18;
+pub const PLAYER_SPRITE_WIDTH: u32 = 18;
 pub const PLAYER_SPRITE_HEIGHT: u32 = 16;
 const PLAYER_SPRITE_ROWS: u32 = 4;
 const PLAYER_SPRITE_COLUMNS: u32 = 4;

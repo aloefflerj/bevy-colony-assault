@@ -9,6 +9,9 @@ use crate::player::systems::*;
 use bevy::prelude::*;
 use std::f32::INFINITY;
 
+const PLATFORM_COLLISION_TOLERANCE_MARGIN: f32 = 0.1;
+const PLATFORM_COLLISION_HEIGHT: f32 = 5.;
+
 pub fn move_x(
     key_board_input: Res<ButtonInput<KeyCode>>,
     time: Res<Time>,
@@ -113,15 +116,39 @@ pub fn handle_ground_touch(
     }
 
     let (mut player, mut player_velocity) = player_query.single_mut();
+    let mut on_platform_translation_y: Option<f32> = None;
+
+    let player_y_radius = PLAYER_SPRITE_HEIGHT as f32 / 2.;
+    let player_x_radius = PLAYER_SPRITE_WIDTH as f32 / 2.;
+
+    let platform_y_radius = PLATFORM_SPRITE_HEIGHT as f32 / 2.;
+    let platform_x_radius = PLATFORM_SPRITE_WIDTH as f32 / 2.;
+
     for platform in platform_query.iter() {
         let y_distance = player.translation.y - platform.translation.y;
-        let player_radius = PLAYER_SPRITE_HEIGHT as f32 / 2.;
-        let platform_radius = PLATFORM_HEIGHT / 2.;
+        let x_distance = player.translation.x - platform.translation.x;
+        let x_distance = x_distance.abs();
+        let top_platform_limit =
+            player_y_radius + platform_y_radius + PLATFORM_COLLISION_TOLERANCE_MARGIN;
 
-        if y_distance < player_radius + platform_radius {
-            player.translation.y = platform.translation.y + player_radius + platform_radius;
+        let bottom_platform_limit = player_y_radius + platform_y_radius - PLATFORM_COLLISION_HEIGHT;
+
+        if (y_distance <= top_platform_limit && y_distance >= bottom_platform_limit)
+            && x_distance < player_x_radius + platform_x_radius
+        {
+            on_platform_translation_y = Some(platform.translation.y);
+            break;
+        }
+    }
+
+    match on_platform_translation_y {
+        Some(platform_translation_y) => {
+            player.translation.y = platform_translation_y + player_y_radius + platform_y_radius;
             grounded_next_state.set(PlayerGroundState::Grounded);
             player_velocity.velocity.y = 0.;
+        }
+        None => {
+            grounded_next_state.set(PlayerGroundState::Falling);
         }
     }
 }

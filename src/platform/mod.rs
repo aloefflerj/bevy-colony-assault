@@ -1,4 +1,3 @@
-mod bundles;
 pub mod components;
 pub mod systems;
 
@@ -9,6 +8,6 @@ pub struct PlatformPlugin;
 
 impl Plugin for PlatformPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Startup, spawn_platform);
+        app.add_systems(Startup, (spawn_platform1, spawn_platform2));
     }
 }
