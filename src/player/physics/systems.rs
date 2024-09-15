@@ -118,7 +118,7 @@ pub fn handle_ground_touch(
         let player_radius = PLAYER_SPRITE_HEIGHT as f32 / 2.;
         let platform_radius = PLATFORM_HEIGHT / 2.;
 
-        if y_distance <= player_radius + platform_radius {
+        if y_distance < player_radius + platform_radius {
             player.translation.y = platform.translation.y + player_radius + platform_radius;
             grounded_next_state.set(PlayerGroundState::Grounded);
         }
