@@ -1,8 +1,7 @@
 use bevy::prelude::*;
 
-use crate::{ORTOGRAPHIC_WINDOW_HEIGHT, ORTOGRAPHIC_WINDOW_WIDTH};
-
-use super::bundles::PlatformBundle;
+use crate::config::*;
+use crate::platform::bundles::*;
 
 pub const PLATFORM_HEIGHT: f32 = ORTOGRAPHIC_WINDOW_HEIGHT as f32 / 5.;
 

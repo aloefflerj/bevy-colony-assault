@@ -1,9 +1,8 @@
 use crate::player::animation::bundles::*;
 use crate::player::animation::components::*;
 use crate::player::components::*;
+use crate::player::physics::components::*;
 use bevy::prelude::*;
-
-use super::physics::components::PlayerVelocity;
 
 const PLAYER_SPRITE_WIDTH: u32 = 18;
 pub const PLAYER_SPRITE_HEIGHT: u32 = 16;

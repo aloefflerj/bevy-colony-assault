@@ -1,6 +1,5 @@
-use bevy::prelude::*;
-
 use crate::player::animation::components::*;
+use bevy::prelude::*;
 
 #[derive(Bundle)]
 pub struct PlayerAnimations {

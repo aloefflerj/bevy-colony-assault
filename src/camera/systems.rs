@@ -1,6 +1,5 @@
+use crate::config::*;
 use bevy::prelude::*;
-
-use crate::ORTOGRAPHIC_PROJECTION_SCALE;
 
 pub fn setup_camera(mut commands: Commands) {
     commands.spawn(Camera2dBundle {

@@ -1,10 +1,9 @@
 use crate::animation::animator::*;
 use crate::player::animation::components::*;
+use crate::player::animation::*;
 use crate::player::components::*;
 use crate::player::physics::components::PlayerVelocity;
 use bevy::prelude::*;
-
-use super::PlayerAnimationState;
 
 pub fn animate_idle(
     time: Res<Time>,

@@ -1,14 +1,13 @@
-use std::f32::INFINITY;
-
+use crate::config::*;
 use crate::platform::components::*;
-use crate::platform::systems::PLATFORM_HEIGHT;
+use crate::platform::systems::*;
 use crate::player::components::*;
+use crate::player::physics::components::*;
 use crate::player::physics::resources::*;
 use crate::player::physics::*;
-use crate::player::PLAYER_SPRITE_HEIGHT;
-use crate::GRAVITY_MULTIPLIER;
+use crate::player::systems::*;
 use bevy::prelude::*;
-use components::PlayerVelocity;
+use std::f32::INFINITY;
 
 pub fn move_x(
     key_board_input: Res<ButtonInput<KeyCode>>,

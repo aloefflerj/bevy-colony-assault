@@ -1,7 +1,6 @@
-use bevy::prelude::*;
-
+use crate::config::*;
 use crate::platform::components::Platform;
-use crate::WINDOW_BOTTOM_Y;
+use bevy::prelude::*;
 
 const PLATFORM_COLOR: Color = Color::linear_rgb(0.29, 0.31, 0.41);
 

@@ -1,8 +1,6 @@
-use std::time::Duration;
-
+use crate::animation::*;
 use bevy::prelude::*;
-
-use crate::animation::DEFAULT_ANIMATION_FPS;
+use std::time::Duration;
 
 #[derive(Component)]
 pub struct PlayerIdleAnimation {
