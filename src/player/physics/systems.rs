@@ -124,11 +124,3 @@ pub fn handle_ground_touch(
         }
     }
 }
-
-pub fn db(query: Query<&PlayerVelocity>) {
-    if query.is_empty() {
-        return;
-    }
-
-    dbg!(query.get_single().unwrap());
-}
