@@ -11,6 +11,8 @@ pub const WINDOW_BOTTOM_Y: f32 = ORTOGRAPHIC_WINDOW_HEIGHT / -2.0;
 
 pub const ORTOGRAPHIC_PROJECTION_SCALE: f32 = 0.166666667;
 
+pub const GRAVITY_MULTIPLIER: f32 = -600.;
+
 pub struct DefaultPluginOptions {
     pub window_plugin: WindowPlugin,
     pub image_plugin: ImagePlugin,

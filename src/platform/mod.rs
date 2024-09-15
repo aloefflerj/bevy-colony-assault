@@ -1,5 +1,6 @@
 mod bundles;
-mod systems;
+pub mod components;
+pub mod systems;
 
 use crate::platform::systems::*;
 use bevy::prelude::*;

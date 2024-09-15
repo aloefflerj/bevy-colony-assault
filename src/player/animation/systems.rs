@@ -1,9 +1,8 @@
 use crate::animation::animator::*;
 use crate::player::animation::components::*;
 use crate::player::components::*;
+use crate::player::physics::components::PlayerVelocity;
 use bevy::prelude::*;
-use bevy::transform::commands;
-use bevy_rapier2d::prelude::*;
 
 use super::PlayerAnimationState;
 
@@ -52,13 +51,7 @@ pub fn animate_run(
 }
 
 pub fn handle_animation_state(
-    mut query: Query<
-        (
-            &KinematicCharacterControllerOutput,
-            &mut PlayerAnimationTimer,
-        ),
-        With<Player>,
-    >,
+    mut query: Query<(&PlayerVelocity, &mut PlayerAnimationTimer), With<Player>>,
     animation_state: Res<State<PlayerAnimationState>>,
     mut animation_next_state: ResMut<NextState<PlayerAnimationState>>,
 ) {
@@ -66,8 +59,8 @@ pub fn handle_animation_state(
         return;
     }
 
-    let (kinematic_output, mut timer) = query.single_mut();
-    if kinematic_output.desired_translation.x == 0. {
+    let (player_velocity, mut timer) = query.single_mut();
+    if player_velocity.velocity.x == 0. {
         let animation = PlayerIdleAnimation::default();
         let frames_qty = animation.frames_qty() as f32;
 

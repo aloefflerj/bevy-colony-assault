@@ -13,6 +13,16 @@ pub struct AnimationHandlerSet;
 #[derive(SystemSet, Debug, Hash, PartialEq, Eq, Clone)]
 pub struct AnimateSet;
 
+#[derive(States, Debug, Clone, Copy, Eq, PartialEq, Hash, Default)]
+pub enum PlayerAnimationState {
+    #[default]
+    Idle,
+    Run,
+    Attack,
+    Jump,
+    Fall,
+}
+
 impl Plugin for PlayerAnimationPlugin {
     fn build(&self, app: &mut App) {
         app.init_state::<PlayerAnimationState>();
@@ -44,14 +54,4 @@ impl Plugin for PlayerAnimationPlugin {
             ),
         );
     }
-}
-
-#[derive(States, Debug, Clone, Copy, Eq, PartialEq, Hash, Default)]
-pub enum PlayerAnimationState {
-    #[default]
-    Idle,
-    Run,
-    Attack,
-    Jump,
-    Fall,
 }

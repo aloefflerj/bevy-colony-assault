@@ -1,20 +1,20 @@
 use bevy::prelude::*;
-use bevy_rapier2d::prelude::*;
 
+use crate::platform::components::Platform;
 use crate::WINDOW_BOTTOM_Y;
 
 const PLATFORM_COLOR: Color = Color::linear_rgb(0.29, 0.31, 0.41);
 
 #[derive(Bundle)]
 pub struct PlatformBundle {
+    platform: Platform,
     sprite_bundle: SpriteBundle,
-    body: RigidBody,
-    collider: Collider,
 }
 
 impl PlatformBundle {
     pub fn new(x: f32, scale: Vec3) -> Self {
         Self {
+            platform: Platform,
             sprite_bundle: SpriteBundle {
                 sprite: Sprite {
                     color: PLATFORM_COLOR,
@@ -27,8 +27,6 @@ impl PlatformBundle {
                 },
                 ..default()
             },
-            body: RigidBody::Fixed,
-            collider: Collider::cuboid(0.5, 0.5),
         }
     }
 }
