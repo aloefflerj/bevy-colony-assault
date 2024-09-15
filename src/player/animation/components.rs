@@ -111,9 +111,11 @@ impl PlayerFallAnimation {
 pub struct PlayerAnimationTimer(pub Timer);
 
 impl PlayerAnimationTimer {
-    pub fn new(frames_qty: f32, timer_mode: TimerMode) -> Self {
+    pub fn new(frames_qty: f32, timer_mode: TimerMode, fps_multiplier: f32) -> Self {
         Self(Timer::new(
-            Duration::from_secs_f32((1.0 / (DEFAULT_ANIMATION_FPS as f32)) * frames_qty),
+            Duration::from_secs_f32(
+                (1.0 / (DEFAULT_ANIMATION_FPS as f32 * fps_multiplier)) * frames_qty,
+            ),
             timer_mode,
         ))
     }

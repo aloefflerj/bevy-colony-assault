@@ -49,34 +49,129 @@ pub fn animate_run(
     }
 }
 
+pub fn animate_jump(
+    time: Res<Time>,
+    mut query: Query<
+        (
+            &PlayerJumpAnimation,
+            &mut PlayerAnimationTimer,
+            &mut TextureAtlas,
+        ),
+        With<Player>,
+    >,
+) {
+    for (jump_animation, mut timer, mut texture_atlas) in &mut query {
+        animate_in_loop(
+            &time,
+            jump_animation.first_frame,
+            jump_animation.last_frame,
+            &mut timer,
+            &mut texture_atlas,
+        );
+    }
+}
+
+pub fn animate_fall(
+    time: Res<Time>,
+    mut query: Query<
+        (
+            &PlayerFallAnimation,
+            &mut PlayerAnimationTimer,
+            &mut TextureAtlas,
+        ),
+        With<Player>,
+    >,
+) {
+    for (fall_animation, mut timer, mut texture_atlas) in &mut query {
+        animate_in_loop(
+            &time,
+            fall_animation.first_frame,
+            fall_animation.last_frame,
+            &mut timer,
+            &mut texture_atlas,
+        );
+    }
+}
+
 pub fn handle_animation_state(
     mut query: Query<(&PlayerVelocity, &mut PlayerAnimationTimer), With<Player>>,
     animation_state: Res<State<PlayerAnimationState>>,
-    mut animation_next_state: ResMut<NextState<PlayerAnimationState>>,
+    animation_next_state: ResMut<NextState<PlayerAnimationState>>,
 ) {
     if query.is_empty() {
         return;
     }
 
     let (player_velocity, mut timer) = query.single_mut();
-    if player_velocity.velocity.x == 0. {
+
+    if player_velocity.velocity.y == 0. && player_velocity.velocity.x == 0. {
         let animation = PlayerIdleAnimation::default();
-        let frames_qty = animation.frames_qty() as f32;
+        let new_animation_state = PlayerAnimationState::Idle;
 
-        let animation_timer = PlayerAnimationTimer::new(frames_qty, TimerMode::Repeating);
-        timer.set_duration(animation_timer.duration());
-        if *animation_state != PlayerAnimationState::Idle {
-            animation_next_state.set(PlayerAnimationState::Idle);
-        }
-    } else {
+        update_animation_state(
+            &animation.frames_qty(),
+            TimerMode::Repeating,
+            1.,
+            &mut timer,
+            animation_state,
+            new_animation_state,
+            animation_next_state,
+        );
+    } else if player_velocity.velocity.y == 0. && player_velocity.velocity.x != 0. {
         let animation = PlayerRunAnimation::default();
-        let frames_qty = animation.frames_qty() as f32;
+        let new_animation_state = PlayerAnimationState::Run;
 
-        let animation_timer = PlayerAnimationTimer::new(frames_qty, TimerMode::Repeating);
-        timer.set_duration(animation_timer.duration());
-        if *animation_state != PlayerAnimationState::Run {
-            animation_next_state.set(PlayerAnimationState::Run);
-        }
+        update_animation_state(
+            &animation.frames_qty(),
+            TimerMode::Repeating,
+            1.5,
+            &mut timer,
+            animation_state,
+            new_animation_state,
+            animation_next_state,
+        );
+    } else if player_velocity.velocity.y > 0. {
+        let animation = PlayerJumpAnimation::default();
+        let new_animation_state = PlayerAnimationState::Jump;
+
+        update_animation_state(
+            &animation.frames_qty(),
+            TimerMode::Repeating,
+            1.,
+            &mut timer,
+            animation_state,
+            new_animation_state,
+            animation_next_state,
+        );
+    } else if player_velocity.velocity.y < 0. {
+        let animation = PlayerFallAnimation::default();
+        let new_animation_state = PlayerAnimationState::Fall;
+
+        update_animation_state(
+            &animation.frames_qty(),
+            TimerMode::Repeating,
+            1.,
+            &mut timer,
+            animation_state,
+            new_animation_state,
+            animation_next_state,
+        );
+    }
+}
+
+fn update_animation_state(
+    frames_qty: &usize,
+    timer_mode: TimerMode,
+    fps_multiplier: f32,
+    timer: &mut PlayerAnimationTimer,
+    animation_state: Res<State<PlayerAnimationState>>,
+    new_animation_state: PlayerAnimationState,
+    mut animation_next_state: ResMut<NextState<PlayerAnimationState>>,
+) {
+    let animation_timer = PlayerAnimationTimer::new(*frames_qty as f32, timer_mode, fps_multiplier);
+    timer.set_duration(animation_timer.duration());
+    if *animation_state != new_animation_state {
+        animation_next_state.set(new_animation_state);
     }
 }
 
@@ -99,17 +194,28 @@ pub fn handle_direction_state(
 
 pub fn reset_animation(
     animation_state: Res<State<PlayerAnimationState>>,
-    mut query: Query<(&PlayerIdleAnimation, &PlayerRunAnimation, &mut TextureAtlas), With<Player>>,
+    mut query: Query<
+        (
+            &PlayerIdleAnimation,
+            &PlayerRunAnimation,
+            &PlayerJumpAnimation,
+            &PlayerFallAnimation,
+            &mut TextureAtlas,
+        ),
+        With<Player>,
+    >,
 ) {
     if query.is_empty() {
         return;
     }
 
-    let (idle, run, mut texture_atlas) = query.single_mut();
+    let (idle, run, jump, fall, mut texture_atlas) = query.single_mut();
 
     let atlas_reset_animation_index = match animation_state.clone() {
         PlayerAnimationState::Idle => idle.first_frame,
         PlayerAnimationState::Run => run.first_frame,
+        PlayerAnimationState::Jump => jump.first_frame,
+        PlayerAnimationState::Fall => fall.first_frame,
         _ => 0,
     };
 

@@ -100,7 +100,7 @@ pub fn apply_gravity(
 }
 
 pub fn handle_ground_touch(
-    mut player_query: Query<&mut Transform, With<Player>>,
+    mut player_query: Query<(&mut Transform, &mut PlayerVelocity), With<Player>>,
     platform_query: Query<&Transform, (With<Platform>, Without<Player>)>,
     mut grounded_next_state: ResMut<NextState<PlayerGroundState>>,
 ) {
@@ -112,7 +112,7 @@ pub fn handle_ground_touch(
         return;
     }
 
-    let mut player = player_query.get_single_mut().unwrap();
+    let (mut player, mut player_velocity) = player_query.single_mut();
     for platform in platform_query.iter() {
         let y_distance = player.translation.y - platform.translation.y;
         let player_radius = PLAYER_SPRITE_HEIGHT as f32 / 2.;
@@ -121,6 +121,7 @@ pub fn handle_ground_touch(
         if y_distance < player_radius + platform_radius {
             player.translation.y = platform.translation.y + player_radius + platform_radius;
             grounded_next_state.set(PlayerGroundState::Grounded);
+            player_velocity.velocity.y = 0.;
         }
     }
 }

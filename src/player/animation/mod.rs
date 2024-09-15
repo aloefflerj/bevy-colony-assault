@@ -42,6 +42,20 @@ impl Plugin for PlayerAnimationPlugin {
             ),
         );
         app.add_systems(
+            OnEnter(PlayerAnimationState::Jump),
+            (
+                reset_timer.in_set(AnimationHandlerSet),
+                reset_animation.in_set(AnimationHandlerSet),
+            ),
+        );
+        app.add_systems(
+            OnEnter(PlayerAnimationState::Fall),
+            (
+                reset_timer.in_set(AnimationHandlerSet),
+                reset_animation.in_set(AnimationHandlerSet),
+            ),
+        );
+        app.add_systems(
             Update,
             (
                 handle_animation_state.in_set(AnimationHandlerSet),
@@ -50,6 +64,12 @@ impl Plugin for PlayerAnimationPlugin {
                     .in_set(AnimateSet),
                 animate_run
                     .run_if(in_state(PlayerAnimationState::Run))
+                    .in_set(AnimateSet),
+                animate_jump
+                    .run_if(in_state(PlayerAnimationState::Jump))
+                    .in_set(AnimateSet),
+                animate_fall
+                    .run_if(in_state(PlayerAnimationState::Fall))
                     .in_set(AnimateSet),
                 update_sprite_direction,
                 handle_direction_state,
