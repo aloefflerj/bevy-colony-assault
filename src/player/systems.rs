@@ -42,7 +42,7 @@ pub fn spawn_player(
         PlayerDirection::Right,
         PlayerVelocity::default(),
         ColliderConfig {
-            size: Vec2::new(16., 16.),
+            size: Vec2::new(10., 16.),
         },
     ));
 }

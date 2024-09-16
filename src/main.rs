@@ -4,6 +4,7 @@ mod collider;
 mod config;
 mod platform;
 mod player;
+mod sets;
 
 use bevy::prelude::*;
 use camera::CameraPlugin;
@@ -12,6 +13,7 @@ use config::*;
 use platform::PlatformPlugin;
 use player::PlayerPlugin;
 use resources::DebugOptions;
+use sets::*;
 
 fn main() {
     let default_plugin_options = DefaultPluginOptions::new();
@@ -26,6 +28,11 @@ fn main() {
         )
         .init_resource::<DebugOptions>()
         .insert_resource(ClearColor(bg_color))
+        .configure_sets(
+            Update,
+            HandlePhysicsForce.before(HandleColliderPhysicsForce),
+        )
+        .configure_sets(Update, HandleColliderPhysicsForce.before(ApplyPhysicsForce))
         .add_plugins(CameraPlugin)
         .add_plugins(PlatformPlugin)
         .add_plugins(PlayerPlugin)

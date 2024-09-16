@@ -85,7 +85,7 @@ pub fn rise(
     }
 }
 
-pub fn apply_gravity(
+pub fn handle_gravity(
     time: Res<Time>,
     mut query: Query<(&mut Transform, &mut PlayerVelocity), With<Player>>,
 ) {
