@@ -1,3 +1,5 @@
+pub mod resources;
+
 use bevy::{prelude::*, window::WindowResolution};
 
 pub const WINDOW_WIDTH: f32 = 1920.0;

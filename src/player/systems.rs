@@ -1,3 +1,4 @@
+use crate::collider::components::*;
 use crate::player::animation::bundles::*;
 use crate::player::animation::components::*;
 use crate::player::components::*;
@@ -40,5 +41,8 @@ pub fn spawn_player(
         PlayerAnimationTimer::default(),
         PlayerDirection::Right,
         PlayerVelocity::default(),
+        ColliderConfig {
+            size: Vec2::new(16., 16.),
+        },
     ));
 }

@@ -34,7 +34,10 @@ impl Plugin for PlayerPhysicsPlugin {
                     in_state(PlayerGroundState::Falling)
                         .or_else(in_state(PlayerGroundState::Rising)),
                 ),
-                handle_ground_touch,
+                handle_ground_touch.run_if(
+                    in_state(PlayerGroundState::Falling)
+                        .or_else(in_state(PlayerGroundState::Grounded)),
+                ),
             ),
         );
     }
