@@ -1,3 +1,4 @@
+use crate::collider::components::*;
 use crate::config::*;
 use crate::platform::components::*;
 use bevy::prelude::*;
@@ -37,6 +38,10 @@ pub fn spawn_platform1(
             layout: texture_atlas_layouts,
             index: 2,
         },
+        ColliderConfig {
+            size: Vec2::new(PLATFORM_SPRITE_WIDTH as f32, PLATFORM_SPRITE_HEIGHT as f32),
+            collider_type: ColliderType::Solid,
+        },
     ));
 }
 
@@ -69,6 +74,10 @@ pub fn spawn_platform2(
         TextureAtlas {
             layout: texture_atlas_layouts,
             index: 3,
+        },
+        ColliderConfig {
+            size: Vec2::new(PLATFORM_SPRITE_WIDTH as f32, PLATFORM_SPRITE_HEIGHT as f32),
+            collider_type: ColliderType::Solid,
         },
     ));
 }
@@ -103,6 +112,10 @@ pub fn spawn_platform3(
             layout: texture_atlas_layouts,
             index: 2,
         },
+        ColliderConfig {
+            size: Vec2::new(PLATFORM_SPRITE_WIDTH as f32, PLATFORM_SPRITE_HEIGHT as f32),
+            collider_type: ColliderType::Solid,
+        },
     ));
 }
 
@@ -135,6 +148,10 @@ pub fn spawn_platform4(
         TextureAtlas {
             layout: texture_atlas_layouts,
             index: 3,
+        },
+        ColliderConfig {
+            size: Vec2::new(PLATFORM_SPRITE_WIDTH as f32, PLATFORM_SPRITE_HEIGHT as f32),
+            collider_type: ColliderType::Solid,
         },
     ));
 }

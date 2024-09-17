@@ -36,22 +36,42 @@ pub fn load_colliders(
             None => Sprite::default(),
         };
 
-        commands.spawn((
-            SpriteBundle {
-                transform,
-                sprite,
-                ..default()
-            },
-            ColliderObject {
-                attached_to_entity_id: entity.index(),
-            },
-        ));
+        let sprite_bundle = SpriteBundle {
+            transform,
+            sprite,
+            ..default()
+        };
+
+        let collider_object = ColliderObject {
+            attached_to_entity_id: entity.index(),
+        };
+
+        if collider_config.collider_type == ColliderType::Actor {
+            commands.spawn((sprite_bundle, collider_object, Actor));
+        } else if collider_config.collider_type == ColliderType::Solid {
+            commands.spawn((sprite_bundle, collider_object, Solid));
+        } else {
+            commands.spawn((sprite_bundle, collider_object));
+        }
     }
 }
 
-pub fn stick_colliders_to_entities(
-    mut collider_query: Query<(&mut Transform, &ColliderObject), With<ColliderObject>>,
-    transform_query: Query<(Entity, &Transform), (With<Transform>, Without<ColliderObject>)>,
+pub fn stick_solid_colliders_to_entities(
+    mut collider_query: Query<(&mut Transform, &ColliderObject), With<Solid>>,
+    transform_query: Query<(Entity, &Transform), (With<Transform>, Without<Solid>)>,
+) {
+    for (mut collider_transform, collider) in collider_query.iter_mut() {
+        for (entity, entity_transform) in transform_query.iter() {
+            if collider.attached_to_entity_id == entity.index() {
+                collider_transform.translation = entity_transform.translation;
+            }
+        }
+    }
+}
+
+pub fn stick_actor_colliders_to_entities(
+    mut collider_query: Query<(&mut Transform, &ColliderObject), With<Actor>>,
+    transform_query: Query<(Entity, &Transform), (With<Transform>, Without<Actor>)>,
 ) {
     for (mut collider_transform, collider) in collider_query.iter_mut() {
         for (entity, entity_transform) in transform_query.iter() {

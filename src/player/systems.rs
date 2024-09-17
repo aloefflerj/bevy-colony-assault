@@ -43,6 +43,7 @@ pub fn spawn_player(
         PlayerVelocity::default(),
         ColliderConfig {
             size: Vec2::new(10., 16.),
+            collider_type: ColliderType::Actor,
         },
     ));
 }
